@@ -6,11 +6,15 @@ import sys
 import tarfile
 from tempfile import NamedTemporaryFile
 
+from . import archive_utils
+
 try:
     from . import archive_utils
     libarchive_enabled = True
 except ImportError:
     libarchive_enabled = False
+
+print(libarchive_enabled)
 
 from . import utils
 from .interface import AbstractBaseFormat

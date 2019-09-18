@@ -85,6 +85,7 @@ static int add_file(
 
     wfilename[(sizeof(wfilename)/sizeof(wfilename[0]))-1] = L'\0';
 #ifdef _WIN32
+    OutputDebugString(filename);
     MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, filename, -1,
                         &wfilename[0], sizeof(wfilename)/sizeof(wfilename[0]));
 #else

@@ -16,7 +16,9 @@ def extract_file(tarball):
 
 
 def create_archive(fullpath, files, compression_filter, compression_opts):
+    print("in archive_utils.create_archive fullpath {}".format(fullpath))
     fullpath = _to_bytes(fullpath)
+    print("in archive_utils.create_archive _to_bytes(fullpath) {}".format(fullpath))
     compression_filter = _to_bytes(compression_filter)
     compression_opts = _to_bytes(compression_opts)
     files = [_to_bytes(f) for f in files]
