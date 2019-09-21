@@ -29,3 +29,7 @@ def create_archive(fullpath, files, compression_filter, compression_opts):
         if len(error_file):
             message += " while writing file: " + error_file.decode('utf-8')
         raise ArchiveCreationError(message)
+
+# create_archive('C:\\Users\\rdonnelly\\cluster.tgz', ['C:\\opt\\asrc\\conda-package-handling\\tests\\data\\unicode-test\\unicode-files\\❤'], 'tbz2', '')
+create_archive('C:\\Users\\rdonnelly\\cluster-empty.tgz', [], 'gzip', '')
+create_archive('C:\\Users\\rdonnelly\\cluster.tgz', ['C:\\opt\\asrc\\conda-package-handling\\tests\\data\\unicode-test\\unicode-files\\❤'], 'bzip2', '')

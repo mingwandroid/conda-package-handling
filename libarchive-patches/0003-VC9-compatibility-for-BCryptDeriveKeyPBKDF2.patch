@@ -1,0 +1,39 @@
+From 15e3e51c25e433c825eafcd79dc10d0c630da8af Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Thu, 19 Sep 2019 19:21:45 +0200
+Subject: [PATCH 03/10] VC9 compatibility for BCryptDeriveKeyPBKDF2
+
+---
+ CMakeLists.txt               | 2 ++
+ libarchive/archive_cryptor.c | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e41cdc6a..7e1bafee 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -666,6 +666,8 @@ ENDIF(ENABLE_CNG)
+ # Following files need windows.h, so we should test it after windows.h test.
+ LA_CHECK_INCLUDE_FILE("wincrypt.h" HAVE_WINCRYPT_H)
+ LA_CHECK_INCLUDE_FILE("winioctl.h" HAVE_WINIOCTL_H)
++# Only available on Windows 7 and above, so not possible with vc9.
++CHECK_FUNCTION_EXISTS(BCryptDeriveKeyPBKDF2 HAVE_BCRYPT_DERIVE_KEY_PBKDF2)
+ 
+ #
+ # Check whether use of __EXTENSIONS__ is safe.
+diff --git a/libarchive/archive_cryptor.c b/libarchive/archive_cryptor.c
+index 71967c9d..4e7c33b1 100644
+--- a/libarchive/archive_cryptor.c
++++ b/libarchive/archive_cryptor.c
+@@ -57,7 +57,7 @@ pbkdf2_sha1(const char *pw, size_t pw_len, const uint8_t *salt,
+ 	return 0;
+ }
+ 
+-#elif defined(_WIN32) && !defined(__CYGWIN__) && defined(HAVE_BCRYPT_H)
++#elif defined(_WIN32) && !defined(__CYGWIN__) && defined(HAVE_BCRYPT_H) && defined(HAVE_BCRYPT_DERIVE_KEY_PBKDF2)
+ #ifdef _MSC_VER
+ #pragma comment(lib, "Bcrypt.lib")
+ #endif
+-- 
+2.23.0
+

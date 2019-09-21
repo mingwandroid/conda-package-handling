@@ -1,0 +1,40 @@
+From e18bc9252696cea08c8c59d4b2dc675017b97d36 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Fri, 20 Sep 2019 14:46:10 +0100
+Subject: [PATCH 09/10] Fix
+ https://github.com/libarchive/libarchive/issues/1025
+
+---
+ libarchive/archive.h         | 2 +-
+ libarchive/archive_virtual.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/libarchive/archive.h b/libarchive/archive.h
+index cdbbeddf..57cd3d8c 100644
+--- a/libarchive/archive.h
++++ b/libarchive/archive.h
+@@ -839,7 +839,7 @@ __LA_DECL la_ssize_t	archive_write_data(struct archive *,
+ 			    const void *, size_t);
+ 
+ /* This interface is currently only available for archive_write_disk handles.  */
+-__LA_DECL la_ssize_t	 archive_write_data_block(struct archive *,
++__LA_DECL int		 archive_write_data_block(struct archive *,
+ 				    const void *, size_t, la_int64_t);
+ 
+ __LA_DECL int		 archive_write_finish_entry(struct archive *);
+diff --git a/libarchive/archive_virtual.c b/libarchive/archive_virtual.c
+index f509ee5c..b5233a0c 100644
+--- a/libarchive/archive_virtual.c
++++ b/libarchive/archive_virtual.c
+@@ -130,7 +130,7 @@ archive_write_data(struct archive *a, const void *buff, size_t s)
+ 	return ((a->vtable->archive_write_data)(a, buff, s));
+ }
+ 
+-la_ssize_t
++int
+ archive_write_data_block(struct archive *a, const void *buff, size_t s,
+     la_int64_t o)
+ {
+-- 
+2.23.0
+
