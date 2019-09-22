@@ -32,14 +32,14 @@ pushd %ROOT_OF_THIS%
   call %ROOT_OF_THIS%\conda.cph\Scripts\activate.bat
   set PATH_BACKUP=%PATH%
   call conda update -y --all
-  call conda install -y git vs2017_win-64 cython %LIBARCHIVE_PACKAGE% %LIBARCHIVE_BUILD_DEPS%
-
+  call conda install -y git vs2017_win-64 cython
+  call conda create -y -p %ROOT_OF_THIS%\conda.cph\_h_env python=3 %LIBARCHIVE_PACKAGE% %LIBARCHIVE_BUILD_DEPS%
   REM Repeated calls to conda install blow our PATH up due to vs2017_win-64 constant reactivation.
   set PATH=%PATH_BACKUP%
   call conda install -y --only-deps conda-build
   call conda list
-  set LIB=%CONDA_PREFIX%\Library\lib;%LIB%
-  set INCLUDE=%CONDA_PREFIX%\Library\include;%INCLUDE%
+  set LIB=%CONDA_PREFIX%\_h_env\Library\lib;%LIB%
+  set INCLUDE=%CONDA_PREFIX%\_h_env\Library\include;%INCLUDE%
 
 pushd conda.cph
   git clone %~dp0 work
@@ -51,10 +51,10 @@ pushd conda.cph
       Powershell -NoProfile -command "$files=$(ls %~dp0libarchive-patches\*.patch) ; git.exe am -3 $files"
     popd
     if not exist CMakeCache.txt cmake -G "Ninja" ^
-        -DCMAKE_INSTALL_PREFIX="%LIBRARY_PREFIX%" ^
+        -DCMAKE_INSTALL_PREFIX=%CONDA_PREFIX%/_h_env ^
         -DCMAKE_BUILD_TYPE=Release ^
         -DCMAKE_C_USE_RESPONSE_FILE_FOR_OBJECTS:BOOL=FALSE ^
-        -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX% ^
+        -DCMAKE_INSTALL_PREFIX=%CONDA_PREFIX%/_h_env/Library ^
         -DCMAKE_C_FLAGS_RELEASE="%CFLAGS%" ^
         -DENABLE_ACL=ON ^
         -DENABLE_BZip2=ON ^
@@ -79,15 +79,15 @@ pushd conda.cph
         -DENABLE_XATTR=ON ^
         -DENABLE_ZLIB=ON ^
         -DENABLE_ZSTD=ON ^
-        -DBZIP2_LIBRARY_RELEASE=%CONDA_PREFIX%/Library/lib/bzip2_static.lib ^
-        -DZLIB_LIBRARY_RELEASE=%CONDA_PREFIX%/Library/lib/zlibstatic.lib ^
-        -DZSTD_LIBRARY=%CONDA_PREFIX%/Library/lib/libzstd_static.lib ^
+        -DBZIP2_LIBRARY_RELEASE=%CONDA_PREFIX%/_h_env/Library/lib/bzip2_static.lib ^
+        -DZLIB_LIBRARY_RELEASE=%CONDA_PREFIX%/_h_env/Library/lib/zlibstatic.lib ^
+        -DZSTD_LIBRARY=%CONDA_PREFIX%/_h_env/Library/lib/libzstd_static.lib ^
         libarchive
     ninja -j12 -v
     if errorlevel 1 exit /b 1
     ninja install
     if errorlevel 1 exit /b 1
-    pushd %CONDA_PREFIX%\Library\lib
+    pushd %CONDA_PREFIX%\_h_env\Library\lib
       lib.exe /OUT:archive_and_deps.lib archive_static.lib libzstd_static.lib bzip2_static.lib zlibstatic.lib
     popd
 :skip_build
