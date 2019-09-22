@@ -33,3 +33,6 @@ def create_archive(fullpath, files, compression_filter, compression_opts):
 # create_archive('C:\\Users\\rdonnelly\\cluster.tgz', ['C:\\opt\\asrc\\conda-package-handling\\tests\\data\\unicode-test\\unicode-files\\❤'], 'tbz2', '')
 create_archive('C:\\Users\\rdonnelly\\cluster-empty.tgz', [], 'gzip', '')
 create_archive('C:\\Users\\rdonnelly\\cluster.tgz', ['C:\\opt\\asrc\\conda-package-handling\\tests\\data\\unicode-test\\unicode-files\\❤'], 'bzip2', '')
+create_archive('C:\\Users\\rdonnelly\\cluster-empty.tar.zstd', [], 'zstd', 'zstd:compression-level=22')
+create_archive('C:\\Users\\rdonnelly\\cluster.tar.zstd', ['C:\\opt\\asrc\\conda-package-handling\\tests\\data\\unicode-test\\unicode-files\\❤'], 'zstd', 'zstd:compression-level=22')
+create_archive('C:\\Users\\rdonnelly\\cluster-empty.tar.zstd', [], 'zstd', 'zstd:compression-level=22')
